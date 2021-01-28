@@ -20,9 +20,11 @@
 
 <main>
   <SeachImagesForm on:word={emitChild} />
-  {word}
+  <div>{word}</div>
+  {#if images.photos.length === 0}
+    該当する写真がありません。
+  {/if}
   {#each images.photos as image}
-    <p>{image}</p>
     <img src={image.src.small} alt="img" />
   {/each}
 </main>
