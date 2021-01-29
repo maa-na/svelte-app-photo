@@ -1,23 +1,38 @@
 import { readable } from 'svelte/store';
+import type { Readable } from 'svelte/store';
 
-export function initVal() {
+type T = {
+	[key: string]: string | number |  {
+		[key: string]: string | number | {
+			[key: string]: string
+		}
+	}[]
+} | null
+
+type initVal = {
+	response: T
+	photos: any[]
+	error: any
+}
+export function initVal(): initVal {
 	return {
-		response: '',
+		response: null,
 		photos: [],
+		error: null
 	}
 }
 
-export function makeImagesStore(query: string) {
+export function makeImagesStore(query: string): Readable<initVal> {
 	const init = initVal();
 	const store = readable(init, makeSubscribe(init, query)); 
 	return store;
 }
 
-function unsubscribe() {
+function unsubscribe(): void {
 	// Nothing to do in this case
 }
 
-function makeSubscribe(data, query) {
+function makeSubscribe(data: initVal, query: string): any {
 	return set => {
 		getImagesApi(data, set, query);
 		
@@ -25,7 +40,7 @@ function makeSubscribe(data, query) {
 	};
 }
 
-async function getImagesApi(data, set, query: string) {
+async function getImagesApi(data: initVal, set: any, query: string): Promise<void> {
   const params = {
     query,
   };
